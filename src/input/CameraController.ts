@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { safeInsets } from '../ui/button';
+import { isUiScreenPoint } from '../ui/layout';
 interface PointerState {
   x: number;
   y: number;
@@ -49,15 +50,15 @@ export class CameraController {
     this.enabled = enabled;
     this.reset();
   }
-  private blocked(y: number): boolean {
+  private blocked(x: number, y: number): boolean {
+    const px = ((x - this.rect.left) * this.camera.width) / this.rect.width;
     const py = ((y - this.rect.top) * this.camera.height) / this.rect.height;
-    const safe = safeInsets();
-    return py < 68 + safe.top || py > this.camera.height - 190 - safe.bottom;
+    return isUiScreenPoint(px, py, this.camera.width, this.camera.height, safeInsets());
   }
   private onDown = (event: PointerEvent): void => {
     this.rect = this.canvas.getBoundingClientRect();
     this.velocityX = 0; this.velocityY = 0;
-    if (!this.enabled || this.blocked(event.clientY) || event.button > 0 || this.pointers.size >= 2)
+    if (!this.enabled || this.blocked(event.clientX, event.clientY) || event.button > 0 || this.pointers.size >= 2)
       return;
     this.pointers.set(event.pointerId, { x: event.clientX, y: event.clientY, startX: event.clientX, startY: event.clientY, started: performance.now(), dragged: false });
     if (this.pointers.size > 1) for (const p of this.pointers.values()) p.dragged = true;
@@ -135,7 +136,7 @@ export class CameraController {
   private onWheel = (event: WheelEvent): void => {
     event.preventDefault();
     this.rect = this.canvas.getBoundingClientRect();
-    if (!this.enabled || this.blocked(event.clientY)) return;
+    if (!this.enabled || this.blocked(event.clientX, event.clientY)) return;
     const x = ((event.clientX - this.rect.left) * this.camera.width) / this.rect.width;
     const y = ((event.clientY - this.rect.top) * this.camera.height) / this.rect.height;
     this.camera.preRender();

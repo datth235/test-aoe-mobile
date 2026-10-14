@@ -45,6 +45,7 @@ function syncViewport(): void {
   }
 }
 window.addEventListener('resize', syncViewport);
+document.addEventListener('fullscreenchange', syncViewport);
 viewport?.addEventListener('resize', syncViewport);
 document.addEventListener('visibilitychange', syncViewport);
 game.events.once(Phaser.Core.Events.READY, () => {

@@ -4,6 +4,8 @@ import { clickFeedback, safeInsets } from '../ui/button';
 import { events } from '../utils/EventBus';
 import { drawCallMeter } from '../render/DrawCallMeter';
 import { buildings, resources, units, type BuildingKind, type Cost, type Resource, type UnitKind } from '../sim/Domain';
+import { fullscreenActive, toggleFullscreen } from '../ui/fullscreen';
+import { fullscreenButtonY } from '../ui/layout';
 
 const font = 'Nunito, system-ui, sans-serif';
 const icons: Record<Resource, string> = { food: '●', wood: '▥', gold: '◆', stone: '⬟' };
@@ -15,7 +17,11 @@ export class UIScene extends Phaser.Scene {
   constructor() { super('UI'); }
   create(): void {
     this.draw(); this.scale.on(Phaser.Scale.Events.RESIZE, this.draw, this);
-    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.scale.off(Phaser.Scale.Events.RESIZE, this.draw, this));
+    document.addEventListener('fullscreenchange', this.draw);
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      this.scale.off(Phaser.Scale.Events.RESIZE, this.draw, this);
+      document.removeEventListener('fullscreenchange', this.draw);
+    });
   }
   private label(x: number, y: number, value: string, size = 14, color = '#f7eac9'): Phaser.GameObjects.Text {
     return this.add.text(x, y, value, { fontFamily: font, fontSize: `${size}px`, color, fontStyle: 'bold' }).setScrollFactor(0);
@@ -47,6 +53,7 @@ export class UIScene extends Phaser.Scene {
     resources.forEach((r, i) => this.label(resourceX + resourceWidth * i, s.top + 20, `${icons[r]} ${Math.floor(game.world.stock[r])}`, 13, r === 'gold' ? '#f8db8d' : '#e6efda'));
     this.label(w - s.right - 82, s.top + 6, `${game.world.population}/${game.world.popCap} pop`, 11);
     this.action(w - s.right - 42, s.top + 41, 76, 42, 'Ⅱ Pause', '', true, () => { events.emit('pauseRequested', true); this.showPause(); });
+    this.action(w - s.right - 48, fullscreenButtonY(h, s), 84, 48, document.fullscreenElement ? '⛶ Exit' : fullscreenActive() ? '⛶ App' : '⛶ Full', '', true, () => { void toggleFullscreen(); });
     const selected = game.selected;
     const building = selected?.type === 'building' ? game.world.getBuilding(selected.id) : undefined;
     const unit = selected?.type === 'unit' ? game.world.getUnit(selected.id) : undefined;

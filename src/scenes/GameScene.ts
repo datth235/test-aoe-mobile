@@ -10,6 +10,7 @@ import { World, type Building, type Command, type Unit } from '../sim/World';
 import type { BuildingKind } from '../sim/Domain';
 import { palette } from '../render/palette';
 import { safeInsets } from '../ui/button';
+import { isUiScreenPoint } from '../ui/layout';
 
 export class GameScene extends Phaser.Scene {
   readonly clock = new SimulationClock();
@@ -76,7 +77,7 @@ export class GameScene extends Phaser.Scene {
     return worldToTile(this.point.x, this.point.y);
   }
   private onPointerMove(pointer: Phaser.Input.Pointer): void {
-    if (!this.placing || pointer.y < 68 + this.safe.top || pointer.y > this.scale.height - 190 - this.safe.bottom) return;
+    if (!this.placing || isUiScreenPoint(pointer.x, pointer.y, this.scale.width, this.scale.height, this.safe)) return;
     this.ghostTile = this.worldTile(pointer.x, pointer.y); this.syncGhost();
   }
   private onWorldTap = (screenX: number, screenY: number): void => {
