@@ -1,0 +1,43 @@
+# M1 files
+
+All files are new. The archive also includes the generated `dist/` static build. Installed `node_modules/` is excluded.
+
+- `.github/workflows/ci.yml`
+- `.gitignore`
+- `.node-version`
+- `.prettierignore`
+- `.prettierrc.json`
+- `README.md`
+- `eslint.config.js`
+- `index.html`
+- `package-lock.json`
+- `package.json`
+- `public/favicon.svg`
+- `public/icons/apple-touch-icon.png`
+- `public/icons/icon-192.png`
+- `public/icons/icon-512.png`
+- `public/icons/icon-maskable-512.png`
+- `render.yaml`
+- `src/data/match.ts`
+- `src/input/CameraController.ts`
+- `src/main.ts`
+- `src/render/DrawCallMeter.ts`
+- `src/render/MapView.ts`
+- `src/render/createTextures.ts`
+- `src/scenes/BootScene.ts`
+- `src/scenes/GameScene.ts`
+- `src/scenes/MainMenuScene.ts`
+- `src/scenes/PreloadScene.ts`
+- `src/scenes/SetupScene.ts`
+- `src/scenes/TapToStartScene.ts`
+- `src/scenes/UIScene.ts`
+- `src/sim/MapGenerator.ts`
+- `src/sim/SimulationClock.ts`
+- `src/style.css`
+- `src/ui/button.ts`
+- `src/utils/EventBus.ts`
+- `src/utils/SeededRandom.ts`
+- `src/utils/iso.ts`
+- `tests/foundations.test.ts`
+- `tsconfig.json`
+- `vite.config.ts`
